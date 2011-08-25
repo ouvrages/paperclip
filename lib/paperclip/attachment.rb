@@ -9,7 +9,7 @@ module Paperclip
     def self.default_options
       @default_options ||= {
         :url                   => "/system/:attachment/:id/:style/:filename",
-        :path                  => ":rails_root/public:url",
+        :path                  => ":rails_root/public/system/:attachment/:id/:style/:filename",
         :styles                => {},
         :only_process          => [],
         :processors            => [:thumbnail],

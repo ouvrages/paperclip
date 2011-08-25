@@ -44,6 +44,14 @@ class AttachmentTest < Test::Unit::TestCase
     assert_equal '/fake_models/1234/fake%20%231', @attachment.url
   end
 
+  should "not escape the path" do
+    @attachment = attachment :url => '/:class/:id/:basename'
+    @model = @attachment.instance
+    @model.id = 1234
+    @model.avatar_file_name = "fake #1.jpg"
+    assert_equal 'fake #1.jpg', File.basename(@attachment.path)
+  end
+
   context "Attachment default_options" do
     setup do
       rebuild_model

@@ -38,6 +38,10 @@ module Paperclip
       [ basename(attachment, style_name), extension(attachment, style_name) ].reject(&:blank?).join(".")
     end
 
+    def escaped_filename attachment, style_name
+      CGI.escape(filename(attachment, style_name))
+    end
+
     # Returns the interpolated URL. Will raise an error if the url itself
     # contains ":url" to prevent infinite recursion. This interpolation
     # is used in the default :path to ease default specifications.
@@ -84,6 +88,10 @@ module Paperclip
     # Returns the basename of the file. e.g. "file" for "file.jpg"
     def basename attachment, style_name
       attachment.original_filename.gsub(/#{File.extname(attachment.original_filename)}$/, "")
+    end
+
+    def escaped_basename attachment, style_name
+      CGI.escape(basename(attachment, style_name))
     end
 
     # Returns the extension of the file. e.g. "jpg" for "file.jpg"

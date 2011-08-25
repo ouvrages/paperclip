@@ -37,11 +37,11 @@ class AttachmentTest < Test::Unit::TestCase
   end
   
   should "escape the url" do
-    @attachment = attachment :url => '/:class/:id/:basename'
+    @attachment = attachment
     @model = @attachment.instance
     @model.id = 1234
     @model.avatar_file_name = "fake #1.jpg"
-    assert_equal '/fake_models/1234/fake%20%231', @attachment.url
+    assert_match %r(/fake\+%231\.jpg$), @attachment.url
   end
 
   should "not escape the path" do
@@ -50,6 +50,15 @@ class AttachmentTest < Test::Unit::TestCase
     @model.id = 1234
     @model.avatar_file_name = "fake #1.jpg"
     assert_equal 'fake #1.jpg', File.basename(@attachment.path)
+  end
+
+  should "escape the url with amp and question mark" do
+    @attachment = attachment
+    @model = @attachment.instance
+    @model.id = 1234
+    @model.avatar_file_name = "fake&?.jpg"
+    assert_match %r(/fake%26%3F\.jpg$), @attachment.url
+    assert_equal 'fake&?.jpg', File.basename(@attachment.path)
   end
 
   context "Attachment default_options" do

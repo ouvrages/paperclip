@@ -1,4 +1,7 @@
 # encoding: utf-8
+
+require 'cgi'
+
 module Paperclip
   # The Attachment class manages the files for a given attachment. It saves
   # when the model saves, deletes when the model is destroyed, and processes
@@ -8,7 +11,7 @@ module Paperclip
 
     def self.default_options
       @default_options ||= {
-        :url                   => "/system/:attachment/:id/:style/:filename",
+        :url                   => "/system/:attachment/:id/:style/:escaped_filename",
         :path                  => ":rails_root/public/system/:attachment/:id/:style/:filename",
         :styles                => {},
         :only_process          => [],
@@ -129,8 +132,7 @@ module Paperclip
     def url(style_name = default_style, use_timestamp = @use_timestamp)
       default_url = @default_url.is_a?(Proc) ? @default_url.call(self) : @default_url
       url = original_filename.nil? ? interpolate(default_url, style_name) : interpolate(@url, style_name)
-      escaped = URI.escape url
-      use_timestamp && updated_at ? [escaped, updated_at].compact.join(escaped.include?("?") ? "&" : "?") : escaped
+      use_timestamp && updated_at ? [url, updated_at].compact.join(url.include?("?") ? "&" : "?") : url
     end
 
     # Returns the path of the attachment as defined by the :path option. If the

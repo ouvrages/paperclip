@@ -39,7 +39,7 @@ module Paperclip
     end
 
     def escaped_filename attachment, style_name
-      CGI.escape(filename(attachment, style_name))
+      CGI.escape(filename(attachment, style_name)).gsub('+', '%20')
     end
 
     # Returns the interpolated URL. Will raise an error if the url itself
